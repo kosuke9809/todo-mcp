@@ -6,8 +6,6 @@ type Todo struct {
 	ID          string    `json:"id"`
 	Title       string    `json:"title"`
 	Description string    `json:"descriptioni"`
-	Priority    string    `json:"priority"`
-	DueDate     string    `json:"due_date"`
 	Tags        []string  `json:"tags"`
 	Completed   bool      `json:"completed"`
 	CreatedAt   time.Time `json:"created_at"`
@@ -17,7 +15,5 @@ type Todo struct {
 type CreateTodoParams struct {
 	Title       string
 	Description string
-	Priority    string
-	DueDate     string
 	Tags        []string
 }

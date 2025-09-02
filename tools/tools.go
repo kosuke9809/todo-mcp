@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"mcp-todo/todo"
 	"mcp-todo/utils"
-	"strings"
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
@@ -16,26 +15,18 @@ func CreateTodo(ctx context.Context, req *mcp.CallToolRequest, args todo.CreateT
 		return nil, nil, fmt.Errorf("title is required")
 	}
 
-	priority := "medium"
-	if args.Priority != "" {
-		switch strings.ToLower(args.Priority) {
-		case "high":
-			priority = "high"
-		case "low":
-			priority = "low"
-		}
-	}
-
 	todo := &todo.Todo{
 		ID:          utils.GenerateID(),
 		Title:       args.Title,
 		Description: args.Description,
-		Priority:    priority,
-		DueDate:     args.DueDate,
 		Tags:        args.Tags,
 		Completed:   false,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
+	}
+
+	if err := (todo); err != nil {
+
 	}
 	return &mcp.CallToolResult{
 		Content: []mcp.Content{
