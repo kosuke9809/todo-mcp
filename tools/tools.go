@@ -10,12 +10,12 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
-func CreateTodo(ctx context.Context, req *mcp.CallToolRequest, args todo.CreateTodoParams) (*mcp.CallToolResult, any, error) {
+func Create(ctx context.Context, req *mcp.CallToolRequest, args todo.CreateTodoParams) (*mcp.CallToolResult, any, error) {
 	if args.Title == "" {
 		return nil, nil, fmt.Errorf("title is required")
 	}
 
-	todo := &todo.Todo{
+	todoItem := todo.Todo{
 		ID:          utils.GenerateID(),
 		Title:       args.Title,
 		Description: args.Description,
@@ -25,12 +25,15 @@ func CreateTodo(ctx context.Context, req *mcp.CallToolRequest, args todo.CreateT
 		UpdatedAt:   time.Now(),
 	}
 
-	if err := (todo); err != nil {
-
+	if err := todo.CreateTodo(todoItem); err != nil {
+		return nil, nil, err
 	}
+
 	return &mcp.CallToolResult{
 		Content: []mcp.Content{
-			&mcp.TextContent{Text: fmt.Sprintf("✅ TODO作成: %s", todo.Title)},
+			&mcp.TextContent{Text: fmt.Sprintf("✅ TODO作成: %s", todoItem.Title)},
 		},
 	}, nil, nil
 }
+
+func List(ctx context.Context, req *mcp.CallToolRequest) (*mcp.CallToolResult, any, error)
