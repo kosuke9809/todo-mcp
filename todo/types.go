@@ -25,21 +25,25 @@ type ListTodoParams struct {
 }
 
 type GetTodoParams struct {
-	ID string `json:"id" jsonschema:"取得するTODOのID"`
+	ID    string `json:"id,omitempty" jsonschema:"取得するTODOのID"`
+	Index int    `json:"index,omitempty" jsonschema:"取得するTODOのインデックス番号（1から開始）"`
 }
 
 type UpdateTodoParams struct {
-	ID          string   `json:"id" jsonschema:"更新するTODOのID（必須）"`
+	ID          string   `json:"id,omitempty" jsonschema:"更新するTODOのID"`
+	Index       int      `json:"index,omitempty" jsonschema:"更新するTODOのインデックス番号（1から開始）"`
 	Title       string   `json:"title,omitempty" jsonschema:"新しいタイトル"`
 	Description string   `json:"description,omitempty" jsonschema:"新しい詳細説明"`
 	Tags        []string `json:"tags,omitempty" jsonschema:"新しいタグのリスト"`
 }
 
 type DeleteTodoParams struct {
-	ID string `json:"id" jsonschema:"削除するTODOのID"`
+	ID    string `json:"id,omitempty" jsonschema:"削除するTODOのID"`
+	Index int    `json:"index,omitempty" jsonschema:"削除するTODOのインデックス番号（1から開始）"`
 }
 
 type CompleteTodoParams struct {
-	ID        string `json:"id" jsonschema:"完了状態を変更するTODOのID"`
+	ID        string `json:"id,omitempty" jsonschema:"完了状態を変更するTODOのID"`
+	Index     int    `json:"index,omitempty" jsonschema:"完了状態を変更するTODOのインデックス番号（1から開始）"`
 	Completed bool   `json:"completed" jsonschema:"完了状態（true: 完了、false: 未完了）"`
 }

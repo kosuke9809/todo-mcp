@@ -32,7 +32,7 @@ func Create(ctx context.Context, req *mcp.CallToolRequest, args todo.CreateTodoP
 
 	return &mcp.CallToolResult{
 		Content: []mcp.Content{
-			&mcp.TextContent{Text: fmt.Sprintf("✅ TODO作成: %s", todoItem.Title)},
+			&mcp.TextContent{Text: fmt.Sprintf("✅ TODO作成: %s\n📋 ID: %s", todoItem.Title, todoItem.ID)},
 		},
 	}, nil, nil
 }
@@ -78,6 +78,7 @@ func List(ctx context.Context, req *mcp.CallToolRequest, args todo.ListTodoParam
 		}
 
 		output += fmt.Sprintf("%d. %s %s%s\n", i+1, status, t.Title, tagsStr)
+		output += fmt.Sprintf("   🆔 ID: %s\n", t.ID)
 		if t.Description != "" {
 			output += fmt.Sprintf("   📋 %s\n", t.Description)
 		}
@@ -91,11 +92,18 @@ func List(ctx context.Context, req *mcp.CallToolRequest, args todo.ListTodoParam
 }
 
 func Get(ctx context.Context, req *mcp.CallToolRequest, args todo.GetTodoParams) (*mcp.CallToolResult, any, error) {
-	if args.ID == "" {
-		return nil, nil, fmt.Errorf("ID is required")
-	}
+	var todoItem *todo.Todo
 
-	todoItem, _ := todo.GetTodoByID(args.ID)
+	if args.ID != "" {
+		todoItem, _ = todo.GetTodoByID(args.ID)
+	} else if args.Index > 0 {
+		todos := todo.GetAllTodos()
+		if args.Index <= len(todos) {
+			todoItem = &todos[args.Index-1]
+		}
+	} else {
+		return nil, nil, fmt.Errorf("ID or Index is required")
+	}
 	if todoItem == nil {
 		return &mcp.CallToolResult{
 			Content: []mcp.Content{
@@ -132,11 +140,21 @@ func Get(ctx context.Context, req *mcp.CallToolRequest, args todo.GetTodoParams)
 }
 
 func Update(ctx context.Context, req *mcp.CallToolRequest, args todo.UpdateTodoParams) (*mcp.CallToolResult, any, error) {
-	if args.ID == "" {
-		return nil, nil, fmt.Errorf("ID is required")
-	}
+	var existingTodo *todo.Todo
+	var todoID string
 
-	existingTodo, _ := todo.GetTodoByID(args.ID)
+	if args.ID != "" {
+		existingTodo, _ = todo.GetTodoByID(args.ID)
+		todoID = args.ID
+	} else if args.Index > 0 {
+		todos := todo.GetAllTodos()
+		if args.Index <= len(todos) {
+			existingTodo = &todos[args.Index-1]
+			todoID = existingTodo.ID
+		}
+	} else {
+		return nil, nil, fmt.Errorf("ID or Index is required")
+	}
 	if existingTodo == nil {
 		return &mcp.CallToolResult{
 			Content: []mcp.Content{
@@ -158,7 +176,7 @@ func Update(ctx context.Context, req *mcp.CallToolRequest, args todo.UpdateTodoP
 		updatedTodo.Tags = args.Tags
 	}
 
-	if err := todo.UpdateTodo(args.ID, updatedTodo); err != nil {
+	if err := todo.UpdateTodo(todoID, updatedTodo); err != nil {
 		return nil, nil, err
 	}
 
@@ -170,11 +188,21 @@ func Update(ctx context.Context, req *mcp.CallToolRequest, args todo.UpdateTodoP
 }
 
 func Delete(ctx context.Context, req *mcp.CallToolRequest, args todo.DeleteTodoParams) (*mcp.CallToolResult, any, error) {
-	if args.ID == "" {
-		return nil, nil, fmt.Errorf("ID is required")
-	}
+	var existingTodo *todo.Todo
+	var todoID string
 
-	existingTodo, _ := todo.GetTodoByID(args.ID)
+	if args.ID != "" {
+		existingTodo, _ = todo.GetTodoByID(args.ID)
+		todoID = args.ID
+	} else if args.Index > 0 {
+		todos := todo.GetAllTodos()
+		if args.Index <= len(todos) {
+			existingTodo = &todos[args.Index-1]
+			todoID = existingTodo.ID
+		}
+	} else {
+		return nil, nil, fmt.Errorf("ID or Index is required")
+	}
 	if existingTodo == nil {
 		return &mcp.CallToolResult{
 			Content: []mcp.Content{
@@ -183,7 +211,7 @@ func Delete(ctx context.Context, req *mcp.CallToolRequest, args todo.DeleteTodoP
 		}, nil, nil
 	}
 
-	if err := todo.DeleteTodo(args.ID); err != nil {
+	if err := todo.DeleteTodo(todoID); err != nil {
 		return nil, nil, err
 	}
 
@@ -195,11 +223,21 @@ func Delete(ctx context.Context, req *mcp.CallToolRequest, args todo.DeleteTodoP
 }
 
 func Complete(ctx context.Context, req *mcp.CallToolRequest, args todo.CompleteTodoParams) (*mcp.CallToolResult, any, error) {
-	if args.ID == "" {
-		return nil, nil, fmt.Errorf("ID is required")
-	}
+	var existingTodo *todo.Todo
+	var todoID string
 
-	existingTodo, _ := todo.GetTodoByID(args.ID)
+	if args.ID != "" {
+		existingTodo, _ = todo.GetTodoByID(args.ID)
+		todoID = args.ID
+	} else if args.Index > 0 {
+		todos := todo.GetAllTodos()
+		if args.Index <= len(todos) {
+			existingTodo = &todos[args.Index-1]
+			todoID = existingTodo.ID
+		}
+	} else {
+		return nil, nil, fmt.Errorf("ID or Index is required")
+	}
 	if existingTodo == nil {
 		return &mcp.CallToolResult{
 			Content: []mcp.Content{
@@ -212,7 +250,7 @@ func Complete(ctx context.Context, req *mcp.CallToolRequest, args todo.CompleteT
 	updatedTodo.Completed = args.Completed
 	updatedTodo.UpdatedAt = time.Now()
 
-	if err := todo.UpdateTodo(args.ID, updatedTodo); err != nil {
+	if err := todo.UpdateTodo(todoID, updatedTodo); err != nil {
 		return nil, nil, err
 	}
 
