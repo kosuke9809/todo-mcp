@@ -1,7 +1,17 @@
 package main
 
-import "fmt"
+import (
+	"context"
+	"log"
+	"mcp-todo/server"
+
+	"github.com/modelcontextprotocol/go-sdk/mcp"
+)
 
 func main() {
-	fmt.Println("Hello, MCP!")
+	mcpServer := server.NewServer()
+
+	if err := mcpServer.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
+		log.Fatal(err)
+	}
 }
