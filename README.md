@@ -157,7 +157,3 @@ create-todo title:"食材購入" tags:["買い物", "日常"]
 create-todo title:"プレゼント選び" tags:["買い物", "特別"]
 list-todos tag:"買い物"
 ```
-
-## ライセンス
-
-MIT License
