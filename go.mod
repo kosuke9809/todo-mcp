@@ -1,4 +1,4 @@
-module mcp-todo
+module github.com/kosuke9809/todo-mcp
 
 go 1.23.0
 

@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"log"
-	"mcp-todo/server"
 
+	"github.com/kosuke9809/todo-mcp/server"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
