@@ -3,8 +3,8 @@ package tools
 import (
 	"context"
 	"fmt"
-	"mcp-todo/todo"
-	"mcp-todo/utils"
+	"github.com/kosuke9809/todo-mcp/todo"
+	"github.com/kosuke9809/todo-mcp/utils"
 	"slices"
 	"time"
 

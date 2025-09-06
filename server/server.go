@@ -1,7 +1,7 @@
 package server
 
 import (
-	"mcp-todo/tools"
+	"github.com/kosuke9809/todo-mcp/tools"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
